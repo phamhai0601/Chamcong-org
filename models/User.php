@@ -1,8 +1,10 @@
 <?php
 
-namespace app\components\Model;
+namespace app\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\web\IdentityInterface;
 
 /**
  * This is the model class for table "user".
@@ -19,7 +21,7 @@ use Yii;
  *
  * @property Role $role
  */
-class User extends \yii\db\ActiveRecord
+class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
 {
     /**
      * {@inheritdoc}
@@ -70,4 +72,55 @@ class User extends \yii\db\ActiveRecord
         return $this->hasOne(Role::className(), ['id' => 'role_id']);
     }
 
+    public function findByUsername($username)
+    {
+        return self::findOne(['username' => $username]);
+    }
+
+    /**
+     * @param int|string $id
+     * @return IdentityInterface|null
+     */
+    public static function findIdentity($id)
+    {
+        // TODO: Implement findIdentity() method.
+        return self::findOne($id);
+    }
+
+    /**
+     * @param mixed $token
+     * @param mixed|null $type
+     * @throws NotSupportedException
+     */
+    public static function findIdentityByAccessToken($token, $type = null)
+    {
+        // TODO: Implement findIdentityByAccessToken() method.
+        throw new NotSupportedException();
+    }
+
+    /**
+     * @return int|string
+     */
+    public function getId()
+    {
+        // TODO: Implement getId() method.
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthKey()
+    {
+        // TODO: Implement getAuthKey() method.
+    }
+
+    /**
+     * @param string $authKey
+     * @return bool
+     */
+    public function validateAuthKey($authKey)
+    {
+        // TODO: Implement validateAuthKey() method.
+    }
 }
