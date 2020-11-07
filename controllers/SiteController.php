@@ -3,6 +3,8 @@
 namespace app\controllers;
 
 
+use app\models\form\RegisterForm;
+use app\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Response;
@@ -78,7 +80,11 @@ class SiteController extends Controller
 
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
+			if(Yii::$app->user->identity->role_id == User::ROLE_ADMIN){
+
+				return $this->redirect(['user/index']);
+			}
+			return $this->goBack();
         }
 
         $model->password = '';
@@ -98,7 +104,6 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
-
     /**
      * Displays about page.
      *
@@ -107,5 +112,16 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+
+    public function actionRegister(){
+    	$model = new RegisterForm();
+	    if ($model->load(Yii::$app->request->post()) && $model->register()) {
+		    Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+		    return $this->goBack();
+	    }
+	    return $this->render('register', [
+		    'model' => $model,
+	    ]);
     }
 }
