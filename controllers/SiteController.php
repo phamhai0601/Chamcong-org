@@ -40,8 +40,12 @@ class SiteController extends Controller
             ],
         ];
     }
+    public function init() {
+	    Yii::$app->layout ='main-admin';
+	    parent::init();
+    }
 
-    /**
+	/**
      * {@inheritdoc}
      */
     public function actions()

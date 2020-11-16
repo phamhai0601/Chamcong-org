@@ -10,8 +10,10 @@
 
 namespace app\helper;
 
+use Yii;
 use app\models\Logwork;
 use app\models\Setting;
+use app\models\User;
 
 class LogworkHelper {
 
@@ -81,7 +83,7 @@ class LogworkHelper {
 			$rResult['timelate'] = 0;
 			$rResult['status']   = Logwork::STATUS_SUCCESS;
 			return $rResult;
-		} else if ($uLogWorkTime_now > $uLogWorkTime AND ($uLogWorkTime_now < ($uLogWorkTime + $uTimeLate))) {
+		} else if ($uLogWorkTime_now > $uLogWorkTime and ($uLogWorkTime_now < ($uLogWorkTime + $uTimeLate))) {
 			$rResult['timelate'] = $uLogWorkTime_now - $uLogWorkTime;
 			$rResult['status']   = Logwork::STATUS_WARNING;
 			return $rResult;
@@ -89,6 +91,26 @@ class LogworkHelper {
 			$rResult['timelate'] = $uLogWorkTime_now - $uLogWorkTime;
 			$rResult['status']   = Logwork::STATUS_DANGER;
 			return $rResult;
+		}
+	}
+
+	/**
+	 * @param Array getdate $date
+	 */
+	public static function Checkoutwork($date) {
+		/** @var User $user */
+		$user = Yii::$app->user->identity;
+		/** @var Logwork $logwork */
+		$logwork = Logwork::findOne(['id' => $user->logwork_id]);
+		/** @var Setting $setting */
+		$setting   = Setting::findOne(['id' => 1]);
+		$time_work = json_decode($setting->working_time);
+		if (intval($date[0]) - $logwork->in_work > self::converTimetoUnix($time_work->house . ":" . $time_work->minutes)) {
+			return Logwork::LOGOUT_SUCCESS;
+		} else if (intval($date[0]) - $logwork->in_work > 3 * 3600) {
+			return Logwork::STATUS_WARNING;
+		} else {
+			return Logwork::LOGOUT_DANGER;
 		}
 	}
 }
