@@ -11,6 +11,7 @@ use yii\web\Response;
 use yii\filters\VerbFilter;
 use app\models\form\LoginForm;
 use yii\web\Controller;
+use common\helper\LogworkHelper;
 
 class SiteController extends Controller
 {
@@ -81,8 +82,9 @@ class SiteController extends Controller
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
 			if(Yii::$app->user->identity->role_id == User::ROLE_ADMIN){
-
 				return $this->redirect(['user/index']);
+			}else{
+				return $this->redirect(['member/index']);
 			}
 			return $this->goBack();
         }
