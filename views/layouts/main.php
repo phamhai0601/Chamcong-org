@@ -38,9 +38,9 @@ AppAsset::register($this);
 		echo Nav::widget([
 			'options' => ['class' => 'navbar-nav navbar-right'],
 			'items' => [
-				['label' => 'Home', 'url' => ['/site/index']],
+				['label' => 'Xin nghỉ', 'url' => ['/acesstakeleave/index']],
 				['label' => 'Lịch sử chấm công', 'url' => ['/logwork/index']],
-				['label' => 'Contact', 'url' => ['/site/contact']],
+				['label' => 'Cập nhập thông tin', 'url' => ['/user-infor/view']],
 				Yii::$app->user->isGuest ? (
 				['label' => 'Login', 'url' => ['/site/login']]
 				) : (
